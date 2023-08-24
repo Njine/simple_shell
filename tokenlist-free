@@ -1,0 +1,29 @@
+#include "lists.h"
+
+/**
+* free_listtoken - Frees a listtoken_t list.
+*
+* Description: This function frees a listtoken_t list and its contents.
+*
+* @head: A pointer to a pointer that points to the first node.
+*
+* Return: void
+*/
+void free_listtoken(listtoken_t **head)
+{
+listtoken_t *node, *temp;
+
+if (head == NULL || *head == NULL)
+return;
+
+node = *head;
+while (node != NULL)
+{
+temp = node->next;
+free(node->token);
+free(node);
+node = temp;
+}
+
+*head = NULL;
+}
