@@ -7,7 +7,7 @@
 *     function reads a line of text from standard input stream (stdin).
 *
 * @input: A pointer to a character pointer that will store the input line.
-* @number_of_malloc_bytes_allocated: A pointer to size of allocated memory
+* @bytes_allocated: A pointer to size of allocated memory
 * @status: The exit status to be used in case of failure.
 *
 * Return:
