@@ -1,75 +1,71 @@
 #include "main.h"
 
 /**
-* number_of_tokens - Count the number of tokens in a string.
-*
-* @input: Input string.
-* @delimiter: Delimiter string.
-*
-* Return: Number of tokens or -1 if failure.
-*/
+ * number_of_tokens - function  returns  no of tokens in a string
+ *
+ * Description: function  returns no of tokens in string
+ *
+ * @input:  string input
+ * @delimiter:  string delimiter
+ *
+ * Return: -1 if failure and a number if successful
+ */
 size_t number_of_tokens(char *input, char *delimiter)
 {
-char *token;
-size_t count_token = 0;
+    char *symb = strtok(input, delimiter);
+    size_t symb_num = 0;
 
-count_token = 0;
-token = strtok(input, delimiter);
-while (token != NULL)
-{
-count_token++;
-token = strtok(NULL, delimiter);
-}
-return (count_token);
-}
+    for (; symb != NULL; symb = strtok(NULL, delimiter))
+    {
+        symb_num++;
+    }
 
+    return (symb_num);
+}
 /**
-* array_maker - Create a NULL-terminated array of tokens from a string.
-*
-* @input: Input string.
-* @delimiter: Delimiter string.
-*
-* Return: Returns NULL on failure and the array on success.
-*/
+ * array_maker - function creates a NULL terminated array of a string delimited
+ *
+ * Description: function creates a NULL terminated array of a string delimited
+ *
+ * @input: input string
+ * @delimiter: delimiter string
+ *
+ * Return: returns NULL on failure and the array on success
+ */
 char **array_maker(char *input, char *delimiter)
 {
-char *token, *input_cpy;
-char **tokar;
-size_t count_token, indexto;
+	char *cpy_load, *symb;
+	char **symb_array;
+	size_t symb_num, index_symb, free_symb;
 
-tokar = NULL;
-input_cpy = strdup(input);
-if (input_cpy == NULL)
-{
-perror("array_maker() Error: input_cpy malloc failure");
-return (NULL);
+	symb_array = NULL;
+	malloc_char(&cpy_load, strlen(input) + 1,
+			"array_maker() Error: cpy_load maoloc failure");
+	strcpy(cpy_load, input);
+	symb_num = number_of_tokens(cpy_load, delimiter);
+	symb_array = malloc_array(symb_array, symb_num + 1,
+			"array_maker() Error: symb_array** maoloc failure");
+	strcpy(cpy_load, input);
+	symb = strtok(cpy_load, delimiter);
+	for (index_symb = 0; index_symb < symb_num; index_symb++)
+	{
+		symb_array[index_symb] = (char *) malloc(sizeof(char) *
+				strlen(symb) + 1);
+		if (symb_array[index_symb] == NULL)
+		{
+			for (free_symb = 0;
+					free_symb < index_symb;
+					free_symb++)
+				free(symb_array[free_symb]);
+			free(cpy_load);
+			free(symb_array);
+			perror("array_maker() Error: symb_array maoloc failure");
+			return (NULL);
+		}
+		strcpy(symb_array[index_symb], symb);
+		symb = strtok(NULL, delimiter);
+	}
+	free(cpy_load);
+	symb_array[symb_num] = NULL;
+	return (symb_array);
 }
-
-count_token = number_of_tokens(input_cpy, delimiter);
-tokar = (char **)malloc(sizeof(char *) * (count_token + 1));
-if (tokar == NULL)
-{
-perror("array_maker() Error: tokar malloc failure");
-free(input_cpy);
-return (NULL);
-}
-
-token = strtok(input_cpy, delimiter);
-for (indexto = 0; indexto < count_token; indexto++)
-{
-tokar[indexto] = strdup(token);
-if (tokar[indexto] == NULL)
-{
-while (indexto > 0)
-free(tokar[--indexto]);
-free(tokar);
-perror("array_maker() Error: tokar malloc failure");
-return (NULL);
-}
-token = strtok(NULL, delimiter);
-}
-free(input_cpy);
-tokar[count_token] = NULL;
-return (tokar);
-}
-
